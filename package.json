@@ -1,0 +1,26 @@
+{
+  "name": "inventory",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "lint": "biome lint .",
+    "format": "biome format . --write"
+  },
+  "bin": {
+    "inventory": "./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "biome": "^0.3.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
+  }
+}

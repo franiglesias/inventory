@@ -1,0 +1,5 @@
+# Project exclude paths
+/src/**/*.js
+/dist
+node_modules
+.idea
