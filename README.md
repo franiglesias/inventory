@@ -1,4 +1,4 @@
-# inventory
+# Inventory
 
 This is a Typescript project to illustrate TDD classicist outside-in.
 
@@ -6,11 +6,12 @@ This is a Typescript project to illustrate TDD classicist outside-in.
 
 Write a little application to manage a simple inventory system:
 
-* User can add products
-* User can consume products providing there is enough stock
-* Get current stock of a given product
-* Get History of the inventory changes of a product
-* Get History of all the products
+* User can add products in any quantity to increase stock
+* User can consume products in any quantity providing there is enough stock to satisfy the need. If no enough stock application should throw an error.
+* Get current stock of a given product. If it doesn't exist, throw an error. If it is out of stock, throw an error.
+* Get the history of the inventory changes for a given product
+* Get the history of all the products
+* Get a list of all the products and their stock level, and an indication of those near end or out of stock
 * Get a list of products that are near end of stock
 
 ## Prerequisites
