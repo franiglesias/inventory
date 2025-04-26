@@ -2,24 +2,25 @@
   "name": "inventory",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "vitest",
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc",
     "lint": "biome lint .",
-    "format": "biome format . --write"
-  },
-  "bin": {
-    "inventory": "./dist/index.js"
+    "format": "biome format . --write",
+    "start": "npx tsx src/index.ts",
+    "dev": "npx nodemon --watch 'src/**/*.ts' --exec 'npx tsx' src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.15.2",
     "biome": "^0.3.3",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   }

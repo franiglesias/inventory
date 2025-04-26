@@ -4,15 +4,14 @@ This is a Typescript project to illustrate TDD classicist outside-in.
 
 ## Challenge
 
-To write a little application to manage a simple inventory system:
+Write a little application to manage a simple inventory system:
 
-* Add products
-* Remove products
-* Get inventory of a given product
+* User can add products
+* User can consume products providing there is enough stock
+* Get current stock of a given product
 * Get History of the inventory changes of a product
 * Get History of all the products
-
-To simplify we use the name of the product as identifier, but you can work
+* Get a list of products that are near end of stock
 
 ## Prerequisites
 
@@ -31,6 +30,7 @@ npm install
 - `npm run test`: Run tests with Vitest
 - `npm run lint`: Run Biome linter
 - `npm run format`: Format code with Biome
+- `npm run start`: Run the app through src/index.ts
 
 ## Development
 
