@@ -14,13 +14,11 @@ export class GetCurrentStockHandler {
     }
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
-        if (!this.hasStockOf(query.productId)) {
-            return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
+        const product = this.products.get(query.productId)
+        if (!product) {
+            return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
         }
-        return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
-    }
 
-    private hasStockOf(productId: string) {
-        return productId != 'no-stock-product-id'
+        return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
     }
 }
