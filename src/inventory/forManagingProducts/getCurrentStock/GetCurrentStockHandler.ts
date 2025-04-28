@@ -1,25 +1,10 @@
 import {GetCurrentStock} from './GetCurrentStock'
 import {GetCurrentStockResponse} from './GetCurrentStockResponse'
-
-class InMemoryProducts {
-    private products: Map<string, object> = new Map()
-
-    constructor() {
-        this.products = new Map()
-        this.products.set('no-stock-product-id', {
-            id: 'no-stock-product-id',
-            name: 'No Stock Product',
-            stock: 0,
-        })
-    }
-
-    public getProductById(productId: string) {
-        return this.products.get(productId)
-    }
-}
+import {ForRetrievingProducts} from '../../forRetrievingProducts/ForRetrievingProducts'
+import {InMemoryProducts} from '../../../driven/forRetrievingProducts/InMemoryProducts'
 
 export class GetCurrentStockHandler {
-    private productRepository: InMemoryProducts
+    private productRepository: ForRetrievingProducts
 
     constructor() {
         this.productRepository = new InMemoryProducts
