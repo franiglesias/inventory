@@ -2,6 +2,7 @@ import {GetCurrentStock} from './GetCurrentStock'
 import {GetCurrentStockResponse} from './GetCurrentStockResponse'
 import {ForRetrievingProducts} from '../../forRetrievingProducts/ForRetrievingProducts'
 import {InMemoryProducts} from '../../../driven/forRetrievingProducts/InMemoryProducts'
+import {ProductId} from '../../product/ProductId'
 
 export class GetCurrentStockHandler {
     private productRepository: ForRetrievingProducts
@@ -11,7 +12,8 @@ export class GetCurrentStockHandler {
     }
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
-        const product = this.getProductById(query.productId)
+        const productId = new ProductId(query.productId)
+        const product = this.getProductById(productId)
         if (!product) {
             return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
         }
@@ -19,7 +21,7 @@ export class GetCurrentStockHandler {
         return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
     }
 
-    private getProductById(productId: string) {
+    private getProductById(productId: ProductId) {
         return this.productRepository.getProductById(productId)
     }
 }

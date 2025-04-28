@@ -1,4 +1,5 @@
 import {ForRetrievingProducts} from '../../inventory/forRetrievingProducts/ForRetrievingProducts'
+import {ProductId} from '../../inventory/product/ProductId'
 
 export class InMemoryProducts implements ForRetrievingProducts {
     private products: Map<string, object> = new Map()
@@ -12,7 +13,7 @@ export class InMemoryProducts implements ForRetrievingProducts {
         })
     }
 
-    getProductById(productId: string) {
-        return this.products.get(productId)
+    getProductById(productId: ProductId) {
+        return this.products.get(productId.toString())
     }
 }

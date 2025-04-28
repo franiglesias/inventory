@@ -1,3 +1,5 @@
+import {ProductId} from '../product/ProductId'
+
 export interface ForRetrievingProducts {
-    getProductById(productId: string): Object | undefined
+    getProductById(productId: ProductId): Object | undefined
 }
