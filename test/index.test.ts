@@ -22,4 +22,20 @@ describe('For Managing Products Port', () => {
             expect(response.error()).toEqual('Product Id no-stock-product-id exhausted')
         })
     })
+
+    describe('When we ask the current stock of a product', () => {
+        it('Should success with product stock information', () => {
+            const query = new GetCurrentStock('existing-product-id')
+            const handler = new GetCurrentStockHandler()
+            const response = handler.handle(query)
+            expect(response.success()).toBeTruthy()
+            expect(response.payload()).toEqual(
+                {
+                    id: 'existing-product-id',
+                    name: 'existing-product-name',
+                    stock: 10
+                }
+            )
+        })
+    })
 })

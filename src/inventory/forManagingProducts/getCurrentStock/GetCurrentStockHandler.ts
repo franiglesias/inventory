@@ -18,7 +18,11 @@ export class GetCurrentStockHandler {
             return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
         }
 
-        return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
+        if (product.stock == 0) {
+            return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
+        }
+
+        return GetCurrentStockResponse.withSuccess(product)
     }
 
     private getProductById(productId: ProductId) {

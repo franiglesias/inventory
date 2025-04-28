@@ -11,6 +11,11 @@ export class InMemoryProducts implements ForRetrievingProducts {
             name: 'No Stock Product',
             stock: 0,
         })
+        this.products.set('existing-product-id', {
+            id: 'existing-product-id',
+            name: 'existing-product-name',
+            stock: 10,
+        })
     }
 
     getProductById(productId: ProductId) {

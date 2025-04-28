@@ -1,18 +1,22 @@
 export class GetCurrentStockResponse {
-    private result: unknown
+    private result: Object
     private errorMessage: string | undefined
 
     static withError(message: string) {
-        return new GetCurrentStockResponse(undefined, message)
+        return new GetCurrentStockResponse({}, message)
     }
 
-    constructor(result: unknown, errorMessage: string) {
+    static withSuccess(result: Object): GetCurrentStockResponse {
+        return new GetCurrentStockResponse(result)
+    }
+
+    constructor(result: Object, errorMessage?: string) {
         this.result = result
         this.errorMessage = errorMessage
     }
 
     success() {
-        return !this.errorMessage
+        return !this.errorMessage || this.errorMessage.length === 0
     }
 
     error(): string {
@@ -20,5 +24,9 @@ export class GetCurrentStockResponse {
             throw new Error('Response was successful')
         }
         return this.errorMessage
+    }
+
+    payload(): Object {
+        return this.result
     }
 }
