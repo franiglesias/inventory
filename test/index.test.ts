@@ -12,4 +12,14 @@ describe('For Managing Products Port', () => {
             expect(response.error()).toEqual('Product Id no-existing-product-id doesn\'t exist')
         })
     })
+
+    describe('When we ask the current stock of a exhausted product', () => {
+        it('Should fail with Broken Stock Error', () => {
+            const query = new GetCurrentStock('no-stock-product-id')
+            const handler = new GetCurrentStockHandler()
+            const response = handler.handle(query)
+            expect(response.success()).toBeFalsy()
+            expect(response.error()).toEqual('Product Id no-stock-product-id exhausted')
+        })
+    })
 })
