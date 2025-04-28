@@ -1,7 +1,7 @@
 import {GetCurrentStock} from './GetCurrentStock'
 import {GetCurrentStockResponse} from './GetCurrentStockResponse'
 
-export class GetCurrentStockHandler {
+class InMemoryProducts {
     private products: Map<string, object> = new Map()
 
     constructor() {
@@ -13,12 +13,28 @@ export class GetCurrentStockHandler {
         })
     }
 
+    public getProductById(productId: string) {
+        return this.products.get(productId)
+    }
+}
+
+export class GetCurrentStockHandler {
+    private productRepository: InMemoryProducts
+
+    constructor() {
+        this.productRepository = new InMemoryProducts
+    }
+
     handle(query: GetCurrentStock): GetCurrentStockResponse {
-        const product = this.products.get(query.productId)
+        const product = this.getProductById(query.productId)
         if (!product) {
             return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
         }
 
         return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
+    }
+
+    private getProductById(productId: string) {
+        return this.productRepository.getProductById(productId)
     }
 }
