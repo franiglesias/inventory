@@ -4,6 +4,12 @@ import {ForRetrievingProducts} from '../../forRetrievingProducts/ForRetrievingPr
 import {InMemoryProducts} from '../../../driven/forRetrievingProducts/InMemoryProducts'
 import {ProductId} from '../../product/ProductId'
 
+type ProductStock = {
+    id: ProductId
+    name: string
+    stock: number
+}
+
 export class GetCurrentStockHandler {
     private productRepository: ForRetrievingProducts
 
@@ -13,7 +19,7 @@ export class GetCurrentStockHandler {
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
         const productId = new ProductId(query.productId)
-        const product = this.getProductById(productId)
+        const product = this.getProductById(productId) as ProductStock | undefined
         if (!product) {
             return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
         }
@@ -22,7 +28,7 @@ export class GetCurrentStockHandler {
             return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
         }
 
-        return GetCurrentStockResponse.withSuccess(product)
+        return GetCurrentStockResponse.withResult(product)
     }
 
     private getProductById(productId: ProductId) {

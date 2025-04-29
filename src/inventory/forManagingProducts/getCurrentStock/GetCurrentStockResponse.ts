@@ -1,12 +1,12 @@
 export class GetCurrentStockResponse {
-    private result: Object
-    private errorMessage: string | undefined
+    private readonly result: Object
+    private readonly errorMessage: string | undefined
 
     static withError(message: string) {
         return new GetCurrentStockResponse({}, message)
     }
 
-    static withSuccess(result: Object): GetCurrentStockResponse {
+    static withResult(result: Object): GetCurrentStockResponse {
         return new GetCurrentStockResponse(result)
     }
 
@@ -20,10 +20,10 @@ export class GetCurrentStockResponse {
     }
 
     error(): string {
-        if (!this.errorMessage) {
+        if (this.success()) {
             throw new Error('Response was successful')
         }
-        return this.errorMessage
+        return this.errorMessage!
     }
 
     payload(): Object {
