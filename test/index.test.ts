@@ -38,4 +38,14 @@ describe('For Managing Products Port', () => {
             )
         })
     })
+
+    describe('When we pass invalid parameters', () => {
+        it('Should fail with Invalid Argument Error', () => {
+            const query = new GetCurrentStock('')
+            const handler = new GetCurrentStockHandler()
+            const response = handler.handle(query)
+            expect(response.success()).toBeFalsy()
+            expect(response.error()).toEqual('Invalid Product Id')
+        })
+    })
 })

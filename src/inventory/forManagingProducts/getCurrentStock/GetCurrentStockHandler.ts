@@ -18,6 +18,9 @@ export class GetCurrentStockHandler {
     }
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
+        if (query.productId.length == 0) {
+            return GetCurrentStockResponse.withError('Invalid Product Id')
+        }
         const productId = new ProductId(query.productId)
         const product = this.getProductById(productId) as ProductStock | undefined
         if (!product) {
