@@ -18,20 +18,26 @@ export class GetCurrentStockHandler {
     }
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
-        if (query.productId.length == 0) {
-            return GetCurrentStockResponse.withError('Invalid Product Id')
+        try {
+            const product = this.obtainProductStockInfo(query.productId)
+
+            if (product.stock == 0) {
+                return GetCurrentStockResponse.withError(`Product Id ${product.id} exhausted`)
+            }
+
+            return GetCurrentStockResponse.withResult(product)
+        } catch (e: unknown) {
+            return GetCurrentStockResponse.withError((e as Error).message)
         }
-        const productId = new ProductId(query.productId)
+    }
+
+    private obtainProductStockInfo(rawProductId: string): ProductStock {
+        const productId = ProductId.ensureValid(rawProductId)
         const product = this.getProductById(productId) as ProductStock | undefined
         if (!product) {
-            return GetCurrentStockResponse.withError(`Product Id ${query.productId} doesn't exist`)
+            throw new Error(`Product Id ${rawProductId} doesn't exist`)
         }
-
-        if (product.stock == 0) {
-            return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
-        }
-
-        return GetCurrentStockResponse.withResult(product)
+        return product
     }
 
     private getProductById(productId: ProductId) {
