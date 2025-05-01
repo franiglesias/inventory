@@ -45,7 +45,7 @@ describe('For Managing Products Port', () => {
             const handler = new GetCurrentStockHandler()
             const response = handler.handle(query)
             expect(response.success()).toBeFalsy()
-            expect(response.error()).toEqual('Invalid Product Id')
+            expect(response.error()).toEqual('Invalid ProductId')
         })
     })
 })
