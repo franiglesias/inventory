@@ -6,8 +6,8 @@ import {Inventory} from '../../Inventory'
 export class GetCurrentStockHandler {
     private inventory: Inventory
 
-    constructor() {
-        this.inventory = new Inventory(new InMemoryProducts())
+    constructor(inventory?: Inventory) {
+        this.inventory = inventory ?? new Inventory(new InMemoryProducts())
     }
 
     handle(query: GetCurrentStock): GetCurrentStockResponse {
