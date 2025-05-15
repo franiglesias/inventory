@@ -1,6 +1,7 @@
 import {GetCurrentStockHandler} from './inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStockHandler'
 import {InMemoryProductStorage} from './driven/forStoringProducts/InMemoryProductStorage'
 import {Inventory} from './inventory/Inventory'
+import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
 
 export class InventoryConfigurator {
     private readonly storage: InMemoryProductStorage
@@ -40,5 +41,9 @@ export class InventoryConfigurator {
         return new GetCurrentStockHandler(
             this.inventory
         )
+    }
+
+    buildAddProductHandler() {
+        return new AddProductHandler()
     }
 }
