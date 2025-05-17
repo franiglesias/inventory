@@ -2,6 +2,7 @@ import {GetCurrentStockHandler} from './inventory/driving/forManagingProducts/ge
 import {InMemoryProductStorage} from './driven/forStoringProducts/InMemoryProductStorage'
 import {Inventory} from './inventory/Inventory'
 import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
+import {IdentityProvider} from './driven/forGettingIdentities/IdentityProvider'
 
 export class InventoryConfigurator {
     private readonly storage: InMemoryProductStorage
@@ -28,8 +29,10 @@ export class InventoryConfigurator {
         const inMemoryProductStorage = new InMemoryProductStorage(
             examples
         )
+        let identityProvider = new IdentityProvider()
         const inventory = new Inventory(
-            inMemoryProductStorage
+            inMemoryProductStorage,
+            identityProvider
         )
         return new InventoryConfigurator(
             inMemoryProductStorage,

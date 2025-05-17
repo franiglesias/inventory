@@ -1,16 +1,16 @@
 import {ProductStock} from './ProductStock'
 import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts'
 import {ProductId} from './ProductId'
-import { UnknownProduct } from './UnknownProduct'
-import {IdentityProvider} from './IdentityProvider'
+import {UnknownProduct} from './UnknownProduct'
+import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
-    private readonly identityProvider: IdentityProvider
+    private readonly identityProvider: ForGettingIdentities
 
-    constructor(storage: ForStoringProducts) {
+    constructor(storage: ForStoringProducts, identityProvider: ForGettingIdentities) {
         this.storage = storage
-        this.identityProvider = new IdentityProvider()
+        this.identityProvider = identityProvider
     }
 
     stockById(productId: string): ProductStock {

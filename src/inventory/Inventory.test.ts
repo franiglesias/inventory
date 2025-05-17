@@ -3,9 +3,14 @@ import {ProductStock} from './ProductStock'
 import {Inventory} from './Inventory'
 import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts'
 import {UnknownProduct} from './UnknownProduct'
+import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
 
 class ProductStorageStub implements ForStoringProducts {
     constructor() {
+    }
+
+    store(productId: string, product: { id: string; name: string; quantity: number }): void {
+        throw new Error('Method not implemented.')
     }
 
     getById(_: string): Object | undefined {
@@ -18,16 +23,27 @@ class ProductStorageStub implements ForStoringProducts {
 }
 
 class ProductStorageNoProductStub implements ForStoringProducts {
-    constructor() {}
+    constructor() {
+    }
+
+    store(productId: string, product: { id: string; name: string; quantity: number }): void {
+        throw new Error('Method not implemented.')
+    }
 
     getById(_: string): Object | undefined {
         return undefined
     }
 }
 
+class IdentityProviderDummy implements ForGettingIdentities {
+    generate(): string {
+        return ''
+    }
+}
+
 describe('Inventory', () => {
     it('should return a ProductStock providing and id', () => {
-        const inventory = new Inventory(new ProductStorageStub())
+        const inventory = new Inventory(new ProductStorageStub(), new IdentityProviderDummy())
         let expected = new ProductStock(
             'existing-product-id',
             'existing-product-name',
@@ -37,7 +53,7 @@ describe('Inventory', () => {
     })
 
     it('should throw Error if no product found', () => {
-        const inventory = new Inventory(new ProductStorageNoProductStub())
+        const inventory = new Inventory(new ProductStorageNoProductStub(), new IdentityProviderDummy())
         expect(() => {
             inventory.stockById('no-existing-product-id')
         }).toThrowError(UnknownProduct)
