@@ -30,7 +30,6 @@ describe('For Managing Products Port', () => {
             result = handler.handle(command)
         })
         it('should confirm the identifier of the added product', () => {
-
             expect(result.unwrap()).toEqual('new-product-id')
         })
 

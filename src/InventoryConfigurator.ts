@@ -44,6 +44,6 @@ export class InventoryConfigurator {
     }
 
     buildAddProductHandler() {
-        return new AddProductHandler()
+        return new AddProductHandler(this.inventory)
     }
 }

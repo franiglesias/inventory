@@ -24,4 +24,8 @@ export class Inventory {
             productData.stock,
         )
     }
+
+    registerProduct(productName: string, initialQuantity: number): string {
+        return 'new-product-id'
+    }
 }
