@@ -1,0 +1,16 @@
+import {ForStoringProducts} from '../../inventory/driven/forStoringProducts/ForStoringProducts'
+
+export class InMemoryProductStorage implements ForStoringProducts {
+    private products: Map<string, Object>
+    constructor(examples: Map<string, Object>) {
+        this.products = examples
+    }
+
+    getById(productId: string): Object | undefined {
+        return this.products.get(productId)
+    }
+
+    store(productId: string, product: { id: string; name: string; stock: number }): void {
+        this.products.set(productId, product)
+    }
+}
