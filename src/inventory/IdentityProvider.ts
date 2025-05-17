@@ -1,5 +1,5 @@
 export class IdentityProvider {
-    newIdentity() {
+    generate() {
         return 'new-product-id'
     }
 }

@@ -2,12 +2,15 @@ import {ProductStock} from './ProductStock'
 import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts'
 import {ProductId} from './ProductId'
 import { UnknownProduct } from './UnknownProduct'
+import {IdentityProvider} from './IdentityProvider'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
+    private readonly identityProvider: IdentityProvider
 
     constructor(storage: ForStoringProducts) {
         this.storage = storage
+        this.identityProvider = new IdentityProvider()
     }
 
     stockById(productId: string): ProductStock {
@@ -26,6 +29,10 @@ export class Inventory {
     }
 
     registerProduct(productName: string, initialQuantity: number): string {
-        return 'new-product-id'
+        const newProductId = this.identityProvider.generate()
+
+        this.storage.store(newProductId, {id: newProductId, name: productName, quantity: initialQuantity})
+
+        return newProductId
     }
 }

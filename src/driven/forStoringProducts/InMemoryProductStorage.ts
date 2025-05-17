@@ -9,4 +9,8 @@ export class InMemoryProductStorage implements ForStoringProducts {
     getById(productId: string): Object | undefined {
         return this.products.get(productId)
     }
+
+    store(productId: string, product: { id: string; name: string; quantity: number }): void {
+
+    }
 }
