@@ -31,7 +31,7 @@ export class Inventory {
     registerProduct(productName: string, initialQuantity: number): string {
         const newProductId = this.identityProvider.generate()
 
-        this.storage.store(newProductId, {id: newProductId, name: productName, quantity: initialQuantity})
+        this.storage.store(newProductId, {id: newProductId, name: productName, stock: initialQuantity})
 
         return newProductId
     }

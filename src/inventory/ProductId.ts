@@ -7,9 +7,6 @@ export class ProductId {
         this.productId = productId
     }
 
-    toString() {
-        return this.productId
-    }
 
     static validatedFrom(productId: string): ProductId {
         if (productId.length === 0) {

@@ -33,7 +33,7 @@ describe('For Managing Products Port', () => {
             expect(result.unwrap()).toEqual('new-product-id')
         })
 
-        it.skip('should store in the database so I can get its information', () => {
+        it('should store in the database so I can get its information', () => {
             const newProductId = result.unwrap()
             expectProductWasStored(newProductId, 'ProductName', 100)
         })
