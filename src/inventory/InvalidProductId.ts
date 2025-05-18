@@ -3,7 +3,7 @@ export class InvalidProductId implements Error {
     message: string;
 
     constructor(productId: string) {
-        this.name = productId;
+        this.name = 'INVALID_PRODUCT_ID';
         this.message = `Invalid Product Id [${productId}]`
     }
 }

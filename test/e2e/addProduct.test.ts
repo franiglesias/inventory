@@ -3,6 +3,7 @@ import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/g
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {AddProduct} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
 import {AddProductResponse} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProductResponse'
+import {InvalidProductName} from '../../src/inventory/InvalidProductName'
 
 describe('For Managing Products Port', () => {
     let configurator: InventoryConfigurator
@@ -36,6 +37,15 @@ describe('For Managing Products Port', () => {
         it('should store in the database so I can get its information', () => {
             const newProductId = result.unwrap()
             expectProductWasStored(newProductId, 'ProductName', 100)
+        })
+    })
+
+    describe('When we try to register products without correct data', () => {
+        it ('should fail if a valid name is not provided', async () => {
+            const command = new AddProduct('', 100)
+            const handler = configurator.buildAddProductHandler()
+            const result = handler.handle(command)
+            expect(result.error()).toBeInstanceOf(InvalidProductName)
         })
     })
 })
