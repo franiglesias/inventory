@@ -25,7 +25,11 @@ export class Product {
         return new Product(newProductId, productName, initialQuantity)
     }
 
-    toStore() {
-        return {id: this.id, name: this.name, stock: this.stock}
+    static rebuild(productId: string, productName: string, stock: number) {
+        return new Product(productId, productName, stock)
+    }
+
+    isExhausted(): boolean {
+        return this.stock === 0
     }
 }

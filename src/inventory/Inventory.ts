@@ -4,6 +4,7 @@ import {ProductId} from './ProductId'
 import {UnknownProduct} from './UnknownProduct'
 import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
 import {Product} from './Product'
+import {ExhaustedProduct} from './ExhaustedProduct'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
@@ -16,16 +17,20 @@ export class Inventory {
 
     stockById(productId: string): ProductStock {
         const pId = ProductId.validatedFrom(productId)
-        const productData: Product | undefined = this.storage.getById(productId.toString())
+        const product: Product | undefined = this.storage.getById(productId.toString())
 
-        if (!productData) {
+        if (!product) {
             throw new UnknownProduct(productId)
         }
 
+        if (product.isExhausted()) {
+            throw new ExhaustedProduct(productId)
+        }
+
         return new ProductStock(
-            productData.id,
-            productData.name,
-            productData.stock,
+            product.id,
+            product.name,
+            product.stock,
         )
     }
 
