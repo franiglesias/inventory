@@ -3,8 +3,7 @@ import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts
 import {ProductId} from './ProductId'
 import {UnknownProduct} from './UnknownProduct'
 import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
-import {InvalidProductName} from './InvalidProductName'
-import {InvalidProductQuantity} from './InvalidProductQuantity'
+import {Product} from './Product'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
@@ -31,19 +30,10 @@ export class Inventory {
     }
 
     registerProduct(productName: string, initialQuantity: number): string {
-        if (productName.length === 0) {
-            throw new InvalidProductName(
-                productName,
-            )
-        }
-
-        if (initialQuantity < 1) {
-            throw new InvalidProductQuantity(initialQuantity)
-        }
-
         const newProductId = this.identityProvider.generate()
+        const productToAdd = Product.register(newProductId, productName, initialQuantity)
 
-        this.storage.store(newProductId, {id: newProductId, name: productName, stock: initialQuantity})
+        this.storage.store(newProductId, productToAdd.toStore())
 
         return newProductId
     }
