@@ -4,6 +4,7 @@ import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {AddProduct} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
 import {AddProductResponse} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProductResponse'
 import {InvalidProductName} from '../../src/inventory/InvalidProductName'
+import {InvalidProductQuantity} from '../../src/inventory/InvalidProductQuantity'
 
 describe('For Managing Products Port', () => {
     let configurator: InventoryConfigurator
@@ -46,6 +47,13 @@ describe('For Managing Products Port', () => {
             const handler = configurator.buildAddProductHandler()
             const result = handler.handle(command)
             expect(result.error()).toBeInstanceOf(InvalidProductName)
+        })
+
+        it ('should fail if a valid quantity is not provided', async () => {
+            const command = new AddProduct('The Product', 0)
+            const handler = configurator.buildAddProductHandler()
+            const result = handler.handle(command)
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
         })
     })
 })
