@@ -4,6 +4,8 @@ import {Inventory} from './inventory/Inventory'
 import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
 import {IdentityProvider} from './driven/forGettingIdentities/IdentityProvider'
 import {Product} from './inventory/Product'
+import {ProductExamples} from './inventory/ProductExamples'
+
 
 export class InventoryConfigurator {
     private readonly storage: InMemoryProductStorage
@@ -16,16 +18,8 @@ export class InventoryConfigurator {
 
     static forTest(): InventoryConfigurator {
         const examples = new Map<string, Product>([
-            ['existing-product-id', Product.rebuild(
-                'existing-product-id',
-                'existing-product-name',
-                10
-            )],
-            ['exhausted-product-id', Product.rebuild(
-                'exhausted-product-id',
-                'exhausted-product-name',
-                0
-            )]
+            ['existing-product-id', ProductExamples.existingProduct()],
+            ['exhausted-product-id', ProductExamples.exhaustedProduct()],
         ])
         const inMemoryProductStorage = new InMemoryProductStorage(
             examples
