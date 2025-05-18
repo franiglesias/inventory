@@ -1,5 +1,7 @@
-export interface ForStoringProducts {
-    getById(productId: string): Object | undefined
+import {Product} from '../../Product'
 
-    store(productId: string, product: { id: string; name: string; stock: number }): void
+export interface ForStoringProducts {
+    getById(productId: string): Product | undefined
+
+    store(productId: string, product: Product): void
 }

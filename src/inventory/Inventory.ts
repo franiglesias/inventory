@@ -16,7 +16,7 @@ export class Inventory {
 
     stockById(productId: string): ProductStock {
         const pId = ProductId.validatedFrom(productId)
-        const productData = this.storage.getById(productId.toString())
+        const productData: Product | undefined = this.storage.getById(productId.toString())
 
         if (!productData) {
             throw new UnknownProduct(productId)
@@ -33,7 +33,7 @@ export class Inventory {
         const newProductId = this.identityProvider.generate()
         const productToAdd = Product.register(newProductId, productName, initialQuantity)
 
-        this.storage.store(newProductId, productToAdd.toStore())
+        this.storage.store(newProductId, productToAdd)
 
         return newProductId
     }
