@@ -10,11 +10,22 @@ export class AddProductHandler {
         this.inventory = inventory
     }
 
-    handle(command: AddProduct) {
-        if (command.productName.length < 1) {
-            return AddProductResponse.failure(new InvalidProductName(command.productName))
+    handle(command: AddProduct):AddProductResponse {
+        try {
+            this.assertValid(command)
+            const newProductId = this.inventory.registerProduct(command.productName, command.initialQuantity)
+            return AddProductResponse.success(newProductId)
+        } catch (err: unknown) {
+            if (err instanceof InvalidProductName) {
+                return AddProductResponse.failure(err)
+            }
+            return AddProductResponse.failure(err as Error)
         }
-        const newProductId = this.inventory.registerProduct(command.productName, command.initialQuantity)
-        return AddProductResponse.success(newProductId)
+    }
+
+    private assertValid(command: AddProduct) {
+        if (typeof command.productName != 'string') {
+            throw new InvalidProductName(command.productName)
+        }
     }
 }

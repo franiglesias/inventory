@@ -42,7 +42,7 @@ describe('For Managing Products Port', () => {
 
     describe('When we try to register products without correct data', () => {
         it ('should fail if a valid name is not provided', async () => {
-            const command = new AddProduct('', 100)
+            const command = new AddProduct(undefined, 100)
             const handler = configurator.buildAddProductHandler()
             const result = handler.handle(command)
             expect(result.error()).toBeInstanceOf(InvalidProductName)
