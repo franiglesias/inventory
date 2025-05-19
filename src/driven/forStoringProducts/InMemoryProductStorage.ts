@@ -3,6 +3,7 @@ import {Product} from '../../inventory/Product'
 
 export class InMemoryProductStorage implements ForStoringProducts {
     private products: Map<string, Product>
+
     constructor(examples: Map<string, Product>) {
         this.products = examples
     }

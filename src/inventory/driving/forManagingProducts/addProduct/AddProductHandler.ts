@@ -1,8 +1,8 @@
 import {AddProduct} from './AddProduct'
-import {AddProductResponse} from './AddProductResponse'
 import {Inventory} from '../../../Inventory'
 import {InvalidProductName} from '../../../InvalidProductName'
 import {InvalidProductQuantity} from '../../../InvalidProductQuantity'
+import {FailedResult, Result, SuccessResult} from '../../Result'
 
 export class AddProductHandler {
     private inventory: Inventory
@@ -11,13 +11,13 @@ export class AddProductHandler {
         this.inventory = inventory
     }
 
-    handle(command: AddProduct):AddProductResponse {
+    handle(command: AddProduct): Result<string> {
         try {
             this.assertValid(command)
             const newProductId = this.inventory.registerProduct(command.productName, command.initialQuantity)
-            return AddProductResponse.success(newProductId)
+            return new SuccessResult<string>(newProductId)
         } catch (err: unknown) {
-            return AddProductResponse.failure(err as Error)
+            return new FailedResult(err as Error)
         }
     }
 

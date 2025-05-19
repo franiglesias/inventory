@@ -1,6 +1,9 @@
 import {beforeAll, describe, expect, it} from 'vitest'
 import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
+import {InvalidProductId} from '../../src/inventory/InvalidProductId'
+import {ExhaustedProduct} from '../../src/inventory/ExhaustedProduct'
+import {UnknownProduct} from '../../src/inventory/UnknownProduct'
 
 
 describe('For Managing Products Port', () => {
@@ -31,7 +34,7 @@ describe('For Managing Products Port', () => {
             expect(() => {
                 result.unwrap()
             }).toThrowError(Error)
-            expect(result.errorMessage()).toEqual('Product Id non-existing-product-id doesn\'t exist')
+            expect(result.error()).toBeInstanceOf(UnknownProduct)
         })
     })
 
@@ -43,7 +46,7 @@ describe('For Managing Products Port', () => {
             expect(() => {
                 result.unwrap()
             }).toThrowError(Error)
-            expect(result.errorMessage()).toEqual('Product Id exhausted-product-id exhausted')
+            expect(result.error()).toBeInstanceOf(ExhaustedProduct)
         })
     })
 
@@ -55,7 +58,7 @@ describe('For Managing Products Port', () => {
             expect(() => {
                 result.unwrap()
             }).toThrowError(Error)
-            expect(result.errorMessage()).toEqual('Invalid Product Id []')
+            expect(result.error()).toBeInstanceOf(InvalidProductId)
         })
     })
 })

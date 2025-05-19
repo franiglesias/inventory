@@ -11,7 +11,7 @@ describe('InMemoryProductStorage', () => {
 
     it('should return objects stored', () => {
         const examples = new Map<string, Product>([
-            ['pr-0001',ProductExamples.existingProduct()],
+            ['pr-0001', ProductExamples.existingProduct()],
         ])
         const storage = new InMemoryProductStorage(examples)
         expect(storage.getById('pr-0001')).toEqual(

@@ -2,10 +2,11 @@ import {describe, expect, it} from 'vitest'
 import {GetCurrentStockHandler} from './GetCurrentStockHandler'
 import {GetCurrentStock} from './GetCurrentStock'
 import {Inventory} from '../../../Inventory'
-import {Product} from '../../../Product'
 import {ForStoringProductsOneProductStub} from '../../../../driven/forStoringProducts/ForStoringProductsOneProductStub'
 import {ForGettingIdentitiesDummy} from '../../../../driven/forGettingIdentities/ForGettingIdentitiesDummy'
 import {ProductExamples} from '../../../ProductExamples'
+import {UnknownProduct} from '../../../UnknownProduct'
+import {ExhaustedProduct} from '../../../ExhaustedProduct'
 
 describe('GetCurrentStockHandler', () => {
     describe('When we ask the current stock of an existing product', () => {
@@ -29,8 +30,10 @@ describe('GetCurrentStockHandler', () => {
             const query = new GetCurrentStock('non-existing-product-id')
             const handler = new GetCurrentStockHandler(new Inventory(new ForStoringProductsOneProductStub(), new ForGettingIdentitiesDummy()))
             const result = handler.handle(query)
-            expect(() => {result.unwrap()}).toThrowError()
-            expect(result.errorMessage()).toEqual('Product Id non-existing-product-id doesn\'t exist')
+            expect(() => {
+                result.unwrap()
+            }).toThrowError()
+            expect(result.error()).toBeInstanceOf(UnknownProduct)
         })
     })
 
@@ -40,8 +43,10 @@ describe('GetCurrentStockHandler', () => {
             const aProduct = ProductExamples.exhaustedProduct()
             const handler = new GetCurrentStockHandler(new Inventory(new ForStoringProductsOneProductStub(aProduct), new ForGettingIdentitiesDummy()))
             const result = handler.handle(query)
-            expect(() => {result.unwrap()}).toThrowError()
-            expect(result.errorMessage()).toEqual('Product Id exhausted-product-id exhausted')
+            expect(() => {
+                result.unwrap()
+            }).toThrowError()
+            expect(result.error()).toBeInstanceOf(ExhaustedProduct)
         })
     })
 })

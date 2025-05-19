@@ -1,6 +1,6 @@
 import {GetCurrentStock} from './GetCurrentStock'
 import {Inventory} from '../../../Inventory'
-import {GetCurrentStockResponse} from './GetCurrentStockResponse'
+import {FailedResult, Result, SuccessResult} from '../../Result'
 
 export class GetCurrentStockHandler {
     private readonly inventory: Inventory
@@ -9,12 +9,12 @@ export class GetCurrentStockHandler {
         this.inventory = inventory
     }
 
-    handle(query: GetCurrentStock): GetCurrentStockResponse {
+    handle(query: GetCurrentStock): Result<object> {
         try {
             const productStock = this.inventory.stockById(query.productId)
-            return GetCurrentStockResponse.withResult(productStock.print())
+            return new SuccessResult<object>(productStock.print())
         } catch (e: unknown) {
-            return GetCurrentStockResponse.withError((e as Error).message)
+            return new FailedResult(e as Error)
         }
     }
 }

@@ -2,9 +2,9 @@ import {beforeAll, describe, expect, it} from 'vitest'
 import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {AddProduct} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
-import {AddProductResponse} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProductResponse'
 import {InvalidProductName} from '../../src/inventory/InvalidProductName'
 import {InvalidProductQuantity} from '../../src/inventory/InvalidProductQuantity'
+import {Result} from '../../src/inventory/driving/Result'
 
 describe('For Managing Products Port', () => {
     let configurator: InventoryConfigurator
@@ -25,7 +25,7 @@ describe('For Managing Products Port', () => {
     }
 
     describe('When we add a product that is not in our database', () => {
-        let result: AddProductResponse
+        let result: Result<string>
         beforeAll(async () => {
             const command = new AddProduct('ProductName', 100)
             const handler = configurator.buildAddProductHandler()
@@ -42,14 +42,14 @@ describe('For Managing Products Port', () => {
     })
 
     describe('When we try to register products without correct data', () => {
-        it ('should fail if a valid name is not provided', async () => {
+        it('should fail if a valid name is not provided', async () => {
             const command = new AddProduct(undefined, 100)
             const handler = configurator.buildAddProductHandler()
             const result = handler.handle(command)
             expect(result.error()).toBeInstanceOf(InvalidProductName)
         })
 
-        it ('should fail if a valid quantity is not provided', async () => {
+        it('should fail if a valid quantity is not provided', async () => {
             const command = new AddProduct('The Product', 0)
             const handler = configurator.buildAddProductHandler()
             const result = handler.handle(command)
