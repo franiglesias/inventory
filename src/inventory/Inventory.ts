@@ -1,10 +1,11 @@
-import {ProductStock} from './ProductStock'
 import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts'
 import {ProductId} from './ProductId'
 import {UnknownProduct} from './UnknownProduct'
 import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
 import {Product} from './Product'
 import {ExhaustedProduct} from './ExhaustedProduct'
+import {ProductRepresentation} from './ProductRepresentation'
+import {ProductStockRepresentation} from './ProductStockRepresentation'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
@@ -15,7 +16,7 @@ export class Inventory {
         this.identityProvider = identityProvider
     }
 
-    stockById(productId: string): ProductStock {
+    stockById(productId: string): ProductRepresentation<any> {
         const pId = ProductId.validatedFrom(productId)
         const product: Product | undefined = this.storage.getById(productId.toString())
 
@@ -27,11 +28,7 @@ export class Inventory {
             throw new ExhaustedProduct(productId)
         }
 
-        return new ProductStock(
-            product.id,
-            product.name,
-            product.stock,
-        )
+        return product.representAs(new ProductStockRepresentation())
     }
 
     registerProduct(productName: string, initialQuantity: number): string {

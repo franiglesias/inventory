@@ -1,5 +1,4 @@
 import {describe, expect, it} from 'vitest'
-import {ProductStock} from './ProductStock'
 import {Inventory} from './Inventory'
 import {UnknownProduct} from './UnknownProduct'
 import {ForStoringProductsOneProductStub} from '../driven/forStoringProducts/ForStoringProductsOneProductStub'
@@ -10,11 +9,11 @@ describe('Inventory', () => {
     it('should return a ProductStock providing and id', () => {
         const aProduct = ProductExamples.existingProduct()
         const inventory = new Inventory(new ForStoringProductsOneProductStub(aProduct), new ForGettingIdentitiesDummy())
-        let expected = new ProductStock(
-            'existing-product-id',
-            'existing-product-name',
-            10
-        )
+        let expected = {
+            id: 'existing-product-id',
+            name: 'existing-product-name',
+            stock: 10
+        }
         expect(inventory.stockById('existing-product-id')).toEqual(expected)
     })
 

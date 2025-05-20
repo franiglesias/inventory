@@ -1,5 +1,6 @@
 import {InvalidProductName} from './InvalidProductName'
 import {InvalidProductQuantity} from './InvalidProductQuantity'
+import {ProductRepresentation} from './ProductRepresentation'
 
 export class Product {
     private readonly id: string
@@ -22,6 +23,7 @@ export class Product {
         if (initialQuantity < 1) {
             throw new InvalidProductQuantity(initialQuantity)
         }
+
         return new Product(newProductId, productName, initialQuantity)
     }
 
@@ -31,5 +33,13 @@ export class Product {
 
     isExhausted(): boolean {
         return this.stock === 0
+    }
+
+    representAs(representation: ProductRepresentation<any>): ProductRepresentation<any> {
+        representation.fill('id', this.id)
+        representation.fill('name', this.name)
+        representation.fill('stock', this.stock)
+
+        return representation
     }
 }
