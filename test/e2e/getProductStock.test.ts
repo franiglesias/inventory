@@ -20,13 +20,17 @@ describe('For Managing Products Port', () => {
         ])
         configurator = InventoryConfigurator.forTest(fixtures)
     })
+
+    function executeGetCurrentStock(productId: string) {
+        const query = new GetCurrentStock(productId)
+        const handler = configurator.buildGetCurrentStockHandler()
+        return handler.handle(query)
+    }
+
     describe('When we ask the current stock of an existing product', () => {
         it('Should return a product stock object as response with available units', () => {
-            const query = new GetCurrentStock('existing-product-id')
-            const handler = configurator.buildGetCurrentStockHandler()
-            const result = handler.handle(query)
-            const stock = result.unwrap()
-            expect(stock).toEqual({
+            const result = executeGetCurrentStock('existing-product-id')
+            expect(result.unwrap()).toEqual({
                 id: 'existing-product-id',
                 name: 'existing-product-name',
                 stock: 10
@@ -34,38 +38,23 @@ describe('For Managing Products Port', () => {
         })
     })
 
-    describe('When we ask the current stock of a non existing product', () => {
+    describe('When we ask the current stock of a non-existing product', () => {
         it('Should return an error', () => {
-            const query = new GetCurrentStock('non-existing-product-id')
-            const handler = configurator.buildGetCurrentStockHandler()
-            const result = handler.handle(query)
-            expect(() => {
-                result.unwrap()
-            }).toThrowError(Error)
+            const result = executeGetCurrentStock('non-existing-product-id')
             expect(result.error()).toBeInstanceOf(UnknownProduct)
         })
     })
 
     describe('When we ask the current stock of an exhausted product', () => {
         it('Should return an error', () => {
-            const query = new GetCurrentStock('exhausted-product-id')
-            const handler = configurator.buildGetCurrentStockHandler()
-            const result = handler.handle(query)
-            expect(() => {
-                result.unwrap()
-            }).toThrowError(Error)
+            const result = executeGetCurrentStock('exhausted-product-id')
             expect(result.error()).toBeInstanceOf(ExhaustedProduct)
         })
     })
 
     describe('When we ask with an invalid product id', () => {
         it('Should return an error', () => {
-            const query = new GetCurrentStock('')
-            const handler = configurator.buildGetCurrentStockHandler()
-            const result = handler.handle(query)
-            expect(() => {
-                result.unwrap()
-            }).toThrowError(Error)
+            const result = executeGetCurrentStock('')
             expect(result.error()).toBeInstanceOf(InvalidProductId)
         })
     })
