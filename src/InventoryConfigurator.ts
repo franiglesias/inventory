@@ -2,9 +2,9 @@ import {GetCurrentStockHandler} from './inventory/driving/forManagingProducts/ge
 import {InMemoryProductStorage} from './driven/forStoringProducts/InMemoryProductStorage'
 import {Inventory} from './inventory/Inventory'
 import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
-import {IdentityProviderStub} from './driven/forGettingIdentities/IdentityProviderStub'
 import {Product} from './inventory/Product'
 import {ProductExamples} from './inventory/ProductExamples'
+import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/ConfigurableIdentityProvider'
 
 
 export class InventoryConfigurator {
@@ -24,7 +24,9 @@ export class InventoryConfigurator {
         const inMemoryProductStorage = new InMemoryProductStorage(
             examples
         )
-        let identityProvider = new IdentityProviderStub()
+        let identityProvider = new ConfigurableIdentityProvider(
+            'new-product-id', 'second-product-id', 'third-product-id'
+        )
         const inventory = new Inventory(
             inMemoryProductStorage,
             identityProvider
