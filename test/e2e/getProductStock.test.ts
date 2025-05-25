@@ -1,15 +1,14 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
-import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {InvalidProductId} from '../../src/inventory/InvalidProductId'
 import {ExhaustedProduct} from '../../src/inventory/ExhaustedProduct'
 import {UnknownProduct} from '../../src/inventory/UnknownProduct'
 import {Product} from '../../src/inventory/Product'
 import {ProductExamples} from '../../src/inventory/ProductExamples'
+import {ForManagingProductsTest} from './forManagingProductsTest'
 
 
 describe('For Managing Products Port', () => {
-    let configurator: InventoryConfigurator
+    let forManagingProducts: ForManagingProductsTest
 
     beforeEach(async () => {
         const fixtures = new Map<string, any>([
@@ -18,18 +17,12 @@ describe('For Managing Products Port', () => {
                 ['exhausted-product-id', ProductExamples.exhaustedProduct()],
             ])],
         ])
-        configurator = InventoryConfigurator.forTest(fixtures)
+        forManagingProducts = new ForManagingProductsTest(fixtures)
     })
-
-    function executeGetCurrentStock(productId: string) {
-        const query = new GetCurrentStock(productId)
-        const handler = configurator.buildGetCurrentStockHandler()
-        return handler.handle(query)
-    }
 
     describe('When we ask the current stock of an existing product', () => {
         it('Should return a product stock object as response with available units', () => {
-            const result = executeGetCurrentStock('existing-product-id')
+            const result = forManagingProducts.GetCurrentStock('existing-product-id')
             expect(result.unwrap()).toEqual({
                 id: 'existing-product-id',
                 name: 'existing-product-name',
@@ -40,21 +33,21 @@ describe('For Managing Products Port', () => {
 
     describe('When we ask the current stock of a non-existing product', () => {
         it('Should return an error', () => {
-            const result = executeGetCurrentStock('non-existing-product-id')
+            const result = forManagingProducts.GetCurrentStock('non-existing-product-id')
             expect(result.error()).toBeInstanceOf(UnknownProduct)
         })
     })
 
     describe('When we ask the current stock of an exhausted product', () => {
         it('Should return an error', () => {
-            const result = executeGetCurrentStock('exhausted-product-id')
+            const result = forManagingProducts.GetCurrentStock('exhausted-product-id')
             expect(result.error()).toBeInstanceOf(ExhaustedProduct)
         })
     })
 
     describe('When we ask with an invalid product id', () => {
         it('Should return an error', () => {
-            const result = executeGetCurrentStock('')
+            const result = forManagingProducts.GetCurrentStock('')
             expect(result.error()).toBeInstanceOf(InvalidProductId)
         })
     })
