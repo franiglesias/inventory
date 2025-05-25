@@ -1,16 +1,24 @@
-import {beforeAll, describe, expect, it} from 'vitest'
+import {beforeEach, describe, expect, it} from 'vitest'
 import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {InvalidProductId} from '../../src/inventory/InvalidProductId'
 import {ExhaustedProduct} from '../../src/inventory/ExhaustedProduct'
 import {UnknownProduct} from '../../src/inventory/UnknownProduct'
+import {Product} from '../../src/inventory/Product'
+import {ProductExamples} from '../../src/inventory/ProductExamples'
 
 
 describe('For Managing Products Port', () => {
     let configurator: InventoryConfigurator
 
-    beforeAll(async () => {
-        configurator = InventoryConfigurator.forTest()
+    beforeEach(async () => {
+        const fixtures = new Map<string, any>([
+            ['products', new Map<string, Product>([
+                ['existing-product-id', ProductExamples.existingProduct()],
+                ['exhausted-product-id', ProductExamples.exhaustedProduct()],
+            ])],
+        ])
+        configurator = InventoryConfigurator.forTest(fixtures)
     })
     describe('When we ask the current stock of an existing product', () => {
         it('Should return a product stock object as response with available units', () => {

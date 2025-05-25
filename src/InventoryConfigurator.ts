@@ -3,7 +3,6 @@ import {InMemoryProductStorage} from './driven/forStoringProducts/InMemoryProduc
 import {Inventory} from './inventory/Inventory'
 import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
 import {Product} from './inventory/Product'
-import {ProductExamples} from './inventory/ProductExamples'
 import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/ConfigurableIdentityProvider'
 
 
@@ -16,16 +15,12 @@ export class InventoryConfigurator {
         this.inventory = inventory
     }
 
-    static forTest(): InventoryConfigurator {
-        const examples = new Map<string, Product>([
-            ['existing-product-id', ProductExamples.existingProduct()],
-            ['exhausted-product-id', ProductExamples.exhaustedProduct()],
-        ])
+    static forTest(fixtures: Map<string, any>): InventoryConfigurator {
         const inMemoryProductStorage = new InMemoryProductStorage(
-            examples
+            fixtures.get('products') || new Map<string, Product>()
         )
         let identityProvider = new ConfigurableIdentityProvider(
-            'new-product-id', 'second-product-id', 'third-product-id'
+            ...fixtures.get('identities') || []
         )
         const inventory = new Inventory(
             inMemoryProductStorage,

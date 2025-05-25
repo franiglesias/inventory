@@ -1,4 +1,4 @@
-import {beforeAll, describe, expect, it} from 'vitest'
+import {beforeEach, describe, expect, it} from 'vitest'
 import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {AddProduct} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
@@ -8,8 +8,12 @@ import {Result} from '../../src/inventory/driving/Result'
 
 describe('For Managing Products Port', () => {
     let configurator: InventoryConfigurator
-    beforeAll(async () => {
-        configurator = InventoryConfigurator.forTest()
+    beforeEach(async () => {
+        console.log('Before each hook: Setting up the InventoryConfigurator for tests')
+        const fixtures = new Map<string, any>([
+            ['identities', ['new-product-id', 'second-product-id']]
+        ])
+        configurator = InventoryConfigurator.forTest(fixtures)
     })
 
     function expectProductWasStored(newProductId: string, newProductName: string, newProductQuantity: number) {
@@ -26,7 +30,8 @@ describe('For Managing Products Port', () => {
 
     describe('When we add a product that is not in our database', () => {
         let result: Result<string>
-        beforeAll(async () => {
+        beforeEach(async () => {
+            console.log('Inner Before all hook: Adding a new product to the inventory')
             const command = new AddProduct('ProductName', 100)
             const handler = configurator.buildAddProductHandler()
             result = handler.handle(command)
@@ -35,7 +40,7 @@ describe('For Managing Products Port', () => {
             expect(result.unwrap()).toEqual('new-product-id')
         })
 
-        it('should store in the database so I can get its information', () => {
+        it('should store in the database, so I can get its information', () => {
             const newProductId = result.unwrap()
             expectProductWasStored(newProductId!, 'ProductName', 100)
         })
