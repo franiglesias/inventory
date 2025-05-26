@@ -8,6 +8,12 @@ export class InMemoryProductStorage implements ForStoringProducts {
         this.products = examples
     }
 
+    hasProductWithName(productName: string): boolean {
+        return Array.from(this.products.values()).some(product => 
+            product.isCalled(productName)
+        );
+    }
+
     getById(productId: string): Product | undefined {
         return this.products.get(productId)
     }

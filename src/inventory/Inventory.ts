@@ -6,6 +6,7 @@ import {Product} from './Product'
 import {ExhaustedProduct} from './ExhaustedProduct'
 import {ProductRepresentation} from './ProductRepresentation'
 import {ProductStockRepresentation} from './ProductStockRepresentation'
+import {ProductWithSameNameAlreadyExists} from './ProductWithSameNameAlreadyExists'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
@@ -32,6 +33,9 @@ export class Inventory {
     }
 
     registerProduct(productName: string, initialQuantity: number): string {
+        if (this.storage.hasProductWithName(productName)) {
+            throw new ProductWithSameNameAlreadyExists(productName)
+        }
         const newProductId = this.identityProvider.generate()
         const productToAdd = Product.register(newProductId, productName, initialQuantity)
 

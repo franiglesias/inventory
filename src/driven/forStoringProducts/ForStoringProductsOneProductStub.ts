@@ -8,6 +8,10 @@ export class ForStoringProductsOneProductStub implements ForStoringProducts {
         this.productToReturn = shouldReturn
     }
 
+    hasProductWithName(productName: string): boolean {
+        throw new Error('hasProductWithName method not implemented.')
+    }
+
     getById(productId: string): Product | undefined {
         return this.productToReturn
     }
