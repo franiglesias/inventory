@@ -1,7 +1,7 @@
 import {GetCurrentStock} from './GetCurrentStock'
 import {Inventory} from '../../../Inventory'
-import {GetCurrentStockResponse} from './GetCurrentStockResponse'
-import {UnknownProduct} from '../../../UnknownProduct'
+import {FailedResult, Result, SuccessResult} from '../../Result'
+import {ProductStock} from '../../../ProductStock'
 
 export class GetCurrentStockHandler {
     private readonly inventory: Inventory
@@ -10,20 +10,12 @@ export class GetCurrentStockHandler {
         this.inventory = inventory
     }
 
-    handle(query: GetCurrentStock): GetCurrentStockResponse {
+    handle(query: GetCurrentStock): Result<object> {
         try {
             const productStock = this.inventory.stockById(query.productId)
-
-            if (productStock.isExhausted()) {
-                return GetCurrentStockResponse.withError(`Product Id ${query.productId} exhausted`)
-            }
-
-            return GetCurrentStockResponse.withResult(productStock.print())
+            return new SuccessResult<ProductStock>(productStock.print())
         } catch (e: unknown) {
-            if (e instanceof UnknownProduct) {
-                return GetCurrentStockResponse.withError((e as UnknownProduct).message)
-            }
-            return GetCurrentStockResponse.withError((e as Error).message)
+            return new FailedResult(e as Error)
         }
     }
 }

@@ -4,6 +4,8 @@ import {InvalidProductId} from './InvalidProductId'
 
 describe('ProductId', () => {
     it('Should be valid on instantiation', () => {
-        expect(() => {ProductId.validatedFrom('')}).toThrowError(InvalidProductId)
+        expect(() => {
+            ProductId.validatedFrom('')
+        }).toThrowError(InvalidProductId)
     })
 })

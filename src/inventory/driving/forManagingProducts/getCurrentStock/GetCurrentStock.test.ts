@@ -2,53 +2,19 @@ import {describe, expect, it} from 'vitest'
 import {GetCurrentStockHandler} from './GetCurrentStockHandler'
 import {GetCurrentStock} from './GetCurrentStock'
 import {Inventory} from '../../../Inventory'
-import {ProductStock} from '../../../ProductStock'
-import {ForStoringProducts} from '../../../driven/forStoringProducts/ForStoringProducts'
+import {ForStoringProductsOneProductStub} from '../../../../driven/forStoringProducts/ForStoringProductsOneProductStub'
+import {ForGettingIdentitiesDummy} from '../../../../driven/forGettingIdentities/ForGettingIdentitiesDummy'
+import {ProductExamples} from '../../../ProductExamples'
 import {UnknownProduct} from '../../../UnknownProduct'
-
-class InventoryStub extends Inventory {
-    constructor() {
-        super({} as ForStoringProducts)
-    }
-
-    stockById(productId: string): ProductStock {
-        return new ProductStock(
-            'existing-product-id',
-            'existing-product-name',
-            10
-        )
-    }
-}
-
-class InventoryUnknownProductStub extends Inventory {
-    constructor() {
-        super({} as ForStoringProducts)
-    }
-
-    stockById(productId: string): ProductStock {
-        throw new UnknownProduct(productId)
-    }
-}
-
-class InventoryExhaustedProductStub extends Inventory {
-    constructor() {
-        super({} as ForStoringProducts)
-    }
-
-    stockById(productId: string): ProductStock {
-        return new ProductStock(
-            'existing-product-id',
-            'existing-product-name',
-            0
-        )
-    }
-}
+import {ExhaustedProduct} from '../../../ExhaustedProduct'
 
 describe('GetCurrentStockHandler', () => {
     describe('When we ask the current stock of an existing product', () => {
         it('Should return a product stock object as response with available units', () => {
             const query = new GetCurrentStock('existing-product-id')
-            const handler = new GetCurrentStockHandler(new InventoryStub())
+            const aProduct = ProductExamples.existingProduct()
+
+            const handler = new GetCurrentStockHandler(new Inventory(new ForStoringProductsOneProductStub(aProduct), new ForGettingIdentitiesDummy()))
             const result = handler.handle(query)
             const stock = result.unwrap()
             expect(stock).toEqual({
@@ -62,20 +28,25 @@ describe('GetCurrentStockHandler', () => {
     describe('When we ask the current stock of a non existing product', () => {
         it('Should return an error', () => {
             const query = new GetCurrentStock('non-existing-product-id')
-            const handler = new GetCurrentStockHandler(new InventoryUnknownProductStub())
+            const handler = new GetCurrentStockHandler(new Inventory(new ForStoringProductsOneProductStub(), new ForGettingIdentitiesDummy()))
             const result = handler.handle(query)
-            expect(() => {result.unwrap()}).toThrowError()
-            expect(result.errorMessage()).toEqual('Product Id non-existing-product-id doesn\'t exist')
+            expect(() => {
+                result.unwrap()
+            }).toThrowError()
+            expect(result.error()).toBeInstanceOf(UnknownProduct)
         })
     })
 
     describe('When we ask the current stock of an exhausted product', () => {
         it('Should return an error', () => {
             const query = new GetCurrentStock('exhausted-product-id')
-            const handler = new GetCurrentStockHandler(new InventoryExhaustedProductStub())
+            const aProduct = ProductExamples.exhaustedProduct()
+            const handler = new GetCurrentStockHandler(new Inventory(new ForStoringProductsOneProductStub(aProduct), new ForGettingIdentitiesDummy()))
             const result = handler.handle(query)
-            expect(() => {result.unwrap()}).toThrowError()
-            expect(result.errorMessage()).toEqual('Product Id exhausted-product-id exhausted')
+            expect(() => {
+                result.unwrap()
+            }).toThrowError()
+            expect(result.error()).toBeInstanceOf(ExhaustedProduct)
         })
     })
 })
