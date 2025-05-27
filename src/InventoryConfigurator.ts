@@ -4,6 +4,7 @@ import {Inventory} from './inventory/Inventory'
 import {AddProductHandler} from './inventory/driving/forManagingProducts/addProduct/AddProductHandler'
 import {Product} from './inventory/Product'
 import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/ConfigurableIdentityProvider'
+import {RestockProductHandler} from './inventory/driving/forManagingProducts/restockProduct/RestockProductHandler'
 
 
 export class InventoryConfigurator {
@@ -40,5 +41,9 @@ export class InventoryConfigurator {
 
     buildAddProductHandler() {
         return new AddProductHandler(this.inventory)
+    }
+
+    buildRestockProductHandler() {
+        return new RestockProductHandler(this.inventory)
     }
 }

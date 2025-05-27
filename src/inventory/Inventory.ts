@@ -43,4 +43,15 @@ export class Inventory {
 
         return newProductId
     }
+
+    restockProduct(productId: string, quantity: number): void {
+        const product = this.storage.getById(productId)
+        if (!product) {
+            throw new UnknownProduct(productId)
+        }
+
+        const updatedProduct = product.restock(quantity)
+
+        this.storage.store(productId, updatedProduct)
+    }
 }

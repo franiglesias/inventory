@@ -49,7 +49,7 @@ export class FailedResult<T> implements Result<T> {
     }
 
     unwrap(): T {
-        throw new Error('This result has an error.', {cause: this.fail})
+        throw new Error(`This result has an error. ${this.fail.message}`, {cause: this.fail})
     }
 
     error(): Error {

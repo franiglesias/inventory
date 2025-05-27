@@ -2,6 +2,7 @@ import { AddProduct } from '../../src/inventory/driving/forManagingProducts/addP
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {Result} from '../../src/inventory/driving/Result'
 import { GetCurrentStock } from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
+import {RestockProduct} from '../../src/inventory/driving/forManagingProducts/restockProduct/RestockProduct'
 
 
 export class ForManagingProductsTest {
@@ -21,5 +22,11 @@ export class ForManagingProductsTest {
         const query = new GetCurrentStock(productId)
         const handler = this.configurator.buildGetCurrentStockHandler()
         return handler.handle(query)
+    }
+
+    RestockProduct(existingProductId: string, number: number): Result<void> {
+        const command = new RestockProduct(existingProductId, number)
+        const handler = this.configurator.buildRestockProductHandler()
+        return handler.handle(command)
     }
 }

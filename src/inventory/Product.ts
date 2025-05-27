@@ -7,13 +7,11 @@ export class Product {
     private readonly id: string
     private readonly name: string
     private readonly stock: number
-    private readonly names: string[] = []
 
     private constructor(id: string, name: string, stock: number) {
         this.id = id
         this.name = name
         this.stock = stock
-        this.names = [name.toLowerCase()]
     }
 
     static register(newProductId: string, productName: string, initialQuantity: number): Product {
@@ -39,7 +37,7 @@ export class Product {
     }
 
     isCalled(productName: string): boolean {
-        return this.names.includes(productName.toLowerCase())
+        return this.name.toLowerCase() == productName.toLowerCase()
     }
 
     representAs(representation: ProductRepresentation<any>): ProductRepresentation<any> {
@@ -48,5 +46,9 @@ export class Product {
         representation.fill('stock', this.stock)
 
         return representation
+    }
+
+    restock(quantity: number): Product {
+        return new Product(this.id, this.name, this.stock + quantity)
     }
 }
