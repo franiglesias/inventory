@@ -49,6 +49,9 @@ export class Product {
     }
 
     restock(quantity: number): Product {
+        if (quantity < 1) {
+            throw new InvalidProductQuantity(quantity)
+        }
         return new Product(this.id, this.name, this.stock + quantity)
     }
 }

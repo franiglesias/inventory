@@ -24,8 +24,8 @@ export class ForManagingProductsTest {
         return handler.handle(query)
     }
 
-    RestockProduct(existingProductId: string, number: number): Result<void> {
-        const command = new RestockProduct(existingProductId, number)
+    RestockProduct(existingProductId: string | undefined, number: number | undefined): Result<void> {
+        const command = new RestockProduct(existingProductId!, number!)
         const handler = this.configurator.buildRestockProductHandler()
         return handler.handle(command)
     }

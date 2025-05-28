@@ -19,8 +19,8 @@ export class Inventory {
 
     stockById(productId: string): ProductRepresentation<any> {
         const pId = ProductId.validatedFrom(productId)
-        const product: Product | undefined = this.storage.getById(productId.toString())
 
+        const product: Product | undefined = this.storage.getById(productId.toString())
         if (!product) {
             throw new UnknownProduct(productId)
         }
