@@ -5,6 +5,7 @@ import {AddProductHandler} from './inventory/driving/forManagingProducts/addProd
 import {Product} from './inventory/Product'
 import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/ConfigurableIdentityProvider'
 import {RestockProductHandler} from './inventory/driving/forManagingProducts/restockProduct/RestockProductHandler'
+import {ConsumeProductHandler} from './inventory/driving/forManagingProducts/consumeProduct/ConsumeProductHandler'
 
 
 export class InventoryConfigurator {
@@ -45,5 +46,9 @@ export class InventoryConfigurator {
 
     buildRestockProductHandler() {
         return new RestockProductHandler(this.inventory)
+    }
+
+    buildConsumeProductHandler() {
+        return new ConsumeProductHandler(this.inventory)
     }
 }

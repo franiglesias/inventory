@@ -1,8 +1,9 @@
-import { AddProduct } from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
+import {AddProduct} from '../../src/inventory/driving/forManagingProducts/addProduct/AddProduct'
 import {InventoryConfigurator} from '../../src/InventoryConfigurator'
 import {Result} from '../../src/inventory/driving/Result'
-import { GetCurrentStock } from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
+import {GetCurrentStock} from '../../src/inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 import {RestockProduct} from '../../src/inventory/driving/forManagingProducts/restockProduct/RestockProduct'
+import {ConsumeProduct} from '../../src/inventory/driving/forManagingProducts/consumeProduct/ConsumeProduct'
 
 
 export class ForManagingProductsTest {
@@ -27,6 +28,12 @@ export class ForManagingProductsTest {
     RestockProduct(existingProductId: string | undefined, number: number | undefined): Result<void> {
         const command = new RestockProduct(existingProductId!, number!)
         const handler = this.configurator.buildRestockProductHandler()
+        return handler.handle(command)
+    }
+
+    ConsumeProduct(existingProductId: string | undefined, number: number | undefined): Result<void> {
+        const command = new ConsumeProduct(existingProductId!, number!)
+        const handler = this.configurator.buildConsumeProductHandler()
         return handler.handle(command)
     }
 }

@@ -3,7 +3,6 @@ import {InvalidProductQuantity} from './InvalidProductQuantity'
 import {ProductRepresentation} from './ProductRepresentation'
 
 export class Product {
-
     private readonly id: string
     private readonly name: string
     private readonly stock: number
@@ -53,5 +52,9 @@ export class Product {
             throw new InvalidProductQuantity(quantity)
         }
         return new Product(this.id, this.name, this.stock + quantity)
+    }
+
+    consume(quantity: number): Product {
+        return new Product(this.id, this.name, this.stock - quantity)
     }
 }

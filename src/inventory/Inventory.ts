@@ -54,4 +54,12 @@ export class Inventory {
 
         this.storage.store(productId, updatedProduct)
     }
+
+    consumeProduct(productId: string, quantity: number): void {
+        const product = this.storage.getById(productId)
+
+        const updatedProduct = product!.consume(quantity)
+
+        this.storage.store(productId, updatedProduct)
+    }
 }
