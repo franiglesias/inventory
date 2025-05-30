@@ -7,6 +7,8 @@ import {ConsumeProduct} from './ConsumeProduct'
 import {ForStoringProducts} from '../../../driven/forStoringProducts/ForStoringProducts'
 import {Product} from '../../../Product'
 import {InMemoryProductStorage} from '../../../../driven/forStoringProducts/InMemoryProductStorage'
+import {InvalidProductId} from '../../../InvalidProductId'
+import {InvalidProductQuantity} from '../../../InvalidProductQuantity'
 
 class ForStoringProductsOneProductFake implements ForStoringProducts {
     private product: Product
@@ -52,5 +54,27 @@ describe('ConsumeProductHandler', () => {
             const consumedProduct = forStoringProducts.getById('existing-product-id')
             expect(consumedProduct?.isExhausted()).toEqual(true)
         })
+    })
+
+    describe('When we try to consume products without correct data', () => {
+        it('should fail if a valid id is not provided', async () => {
+            const result = handler.handle(new ConsumeProduct(undefined, 100))
+            expect(result.error()).toBeInstanceOf(InvalidProductId)
+        })
+
+        it('should fail if a valid quantity is not provided', async () => {
+            const result = handler.handle(new ConsumeProduct('existing-product-id', undefined))
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        })
+
+        // it('should fail if a negative quantity is provided', async () => {
+        //     const result = forManagingProducts.ConsumeProduct('existing-product-id', -10)
+        //     expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        // })
+
+        // it('should fail if a zero quantity is provided', async () => {
+        //     const result = forManagingProducts.ConsumeProduct('existing-product-id', 0)
+        //     expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        // })
     })
 })

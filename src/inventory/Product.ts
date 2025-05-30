@@ -55,6 +55,16 @@ export class Product {
     }
 
     consume(quantity: number): Product {
-        return new Product(this.id, this.name, this.stock - quantity)
+        if (quantity < 0) {
+            throw new InvalidProductQuantity(quantity)
+        }
+
+        const updatedQuantity = this.stock - quantity
+
+        if (updatedQuantity < 0) {
+            throw new InvalidProductQuantity(quantity)
+        }
+
+        return new Product(this.id, this.name, updatedQuantity)
     }
 }

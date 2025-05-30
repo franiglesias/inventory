@@ -39,19 +39,24 @@ describe('For managing products', () => {
             expect(result.error()).toBeInstanceOf(InvalidProductId)
         })
 
-        // it('should fail if a valid quantity is not provided', async () => {
-        //     const result = forManagingProducts.ConsumeProduct('existing-product-id', undefined)
-        //     expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
-        // })
-        //
-        // it('should fail if a negative quantity is provided', async () => {
-        //     const result = forManagingProducts.ConsumeProduct('existing-product-id', -10)
-        //     expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
-        // })
-        //
-        // it('should fail if a zero quantity is provided', async () => {
-        //     const result = forManagingProducts.ConsumeProduct('existing-product-id', 0)
-        //     expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
-        // })
+        it('should fail if a valid quantity is not provided', async () => {
+            const result = forManagingProducts.ConsumeProduct('existing-product-id', undefined)
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        })
+
+        it('should fail if a negative quantity is provided', async () => {
+            const result = forManagingProducts.ConsumeProduct('existing-product-id', -10)
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        })
+
+        it('should fail if a zero quantity is provided', async () => {
+            const result = forManagingProducts.ConsumeProduct('existing-product-id', 0)
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        })
+
+        it('should fail if we want to consume more than current stock', async () => {
+            const result = forManagingProducts.ConsumeProduct('existing-product-id', 20)
+            expect(result.error()).toBeInstanceOf(InvalidProductQuantity)
+        })
     })
 })
