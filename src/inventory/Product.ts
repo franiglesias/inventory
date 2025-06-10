@@ -55,7 +55,7 @@ export class Product {
     }
 
     consume(quantity: number): Product {
-        if (quantity < 0) {
+        if (quantity < 1) {
             throw new InvalidProductQuantity(quantity)
         }
 
