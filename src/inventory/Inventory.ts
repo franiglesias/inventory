@@ -1,26 +1,28 @@
 import {ForStoringProducts} from './driven/forStoringProducts/ForStoringProducts'
-import {ProductId} from './ProductId'
 import {UnknownProduct} from './UnknownProduct'
-import {ForGettingIdentities} from './driven/forGettingIdentities/ForGettingIdentities'
 import {Product} from './Product'
 import {ExhaustedProduct} from './ExhaustedProduct'
 import {ProductRepresentation} from './ProductRepresentation'
 import {ProductStockRepresentation} from './ProductStockRepresentation'
 import {ProductWithSameNameAlreadyExists} from './ProductWithSameNameAlreadyExists'
+import {ProductIdentity} from './ProductIdentity'
+import {InvalidProductId} from './InvalidProductId'
 
 export class Inventory {
     private readonly storage: ForStoringProducts
-    private readonly identityProvider: ForGettingIdentities
+    private identity: ProductIdentity
 
-    constructor(storage: ForStoringProducts, identityProvider: ForGettingIdentities) {
+    constructor(storage: ForStoringProducts, identity: ProductIdentity) {
         this.storage = storage
-        this.identityProvider = identityProvider
+        this.identity = identity
     }
 
     stockById(productId: string): ProductRepresentation<any> {
-        const pId = ProductId.validatedFrom(productId)
+        if (productId.length === 0) {
+            throw new InvalidProductId(productId)
+        }
 
-        const product: Product | undefined = this.storage.getById(productId.toString())
+        const product: Product | undefined = this.storage.getById(productId)
         if (!product) {
             throw new UnknownProduct(productId)
         }
@@ -36,7 +38,7 @@ export class Inventory {
         if (this.storage.hasProductWithName(productName)) {
             throw new ProductWithSameNameAlreadyExists(productName)
         }
-        const newProductId = this.identityProvider.generate()
+        const newProductId = this.identity.generateFor(productName)
         const productToAdd = Product.register(newProductId, productName, initialQuantity)
 
         this.storage.store(newProductId, productToAdd)

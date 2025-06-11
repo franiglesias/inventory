@@ -6,11 +6,13 @@ import {ForGettingIdentitiesDummy} from '../driven/forGettingIdentities/ForGetti
 import {ProductExamples} from './ProductExamples'
 import {InMemoryProductStorage} from '../driven/forStoringProducts/InMemoryProductStorage'
 import {Product} from './Product'
+import {ProductIdentity} from './ProductIdentity'
 
 describe('Inventory', () => {
     it('should return a ProductStock providing and id', () => {
         const aProduct = ProductExamples.existingProduct()
-        const inventory = new Inventory(new ForStoringProductsOneProductStub(aProduct), new ForGettingIdentitiesDummy())
+        const productIdentity = new ProductIdentity(new ForGettingIdentitiesDummy())
+        const inventory = new Inventory(new ForStoringProductsOneProductStub(aProduct), productIdentity)
         let expected = {
             id: 'existing-product-id',
             name: 'existing-product-name',
@@ -20,7 +22,8 @@ describe('Inventory', () => {
     })
 
     it('should throw Error if no product found', () => {
-        const inventory = new Inventory(new ForStoringProductsOneProductStub(), new ForGettingIdentitiesDummy())
+        const productIdentity = new ProductIdentity(new ForGettingIdentitiesDummy())
+        const inventory = new Inventory(new ForStoringProductsOneProductStub(), productIdentity)
         expect(() => {
             inventory.stockById('no-existing-product-id')
         }).toThrowError(UnknownProduct)
@@ -31,7 +34,8 @@ describe('Inventory', () => {
         const productStorage = new InMemoryProductStorage(
             new Map<string,  Product>([['existing-product-id', aProduct]])
         )
-        const inventory = new Inventory(productStorage, new ForGettingIdentitiesDummy())
+        const productIdentity = new ProductIdentity(new ForGettingIdentitiesDummy())
+        const inventory = new Inventory(productStorage, productIdentity)
 
         inventory.consumeProduct('existing-product-id', 10)
         const updatedProduct = productStorage.getById('existing-product-id')

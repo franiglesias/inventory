@@ -6,6 +6,7 @@ import {Product} from './inventory/Product'
 import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/ConfigurableIdentityProvider'
 import {RestockProductHandler} from './inventory/driving/forManagingProducts/restockProduct/RestockProductHandler'
 import {ConsumeProductHandler} from './inventory/driving/forManagingProducts/consumeProduct/ConsumeProductHandler'
+import {ProductIdentity} from './inventory/ProductIdentity'
 
 
 export class InventoryConfigurator {
@@ -24,10 +25,8 @@ export class InventoryConfigurator {
         let identityProvider = new ConfigurableIdentityProvider(
             ...fixtures.get('identities') || []
         )
-        const inventory = new Inventory(
-            inMemoryProductStorage,
-            identityProvider
-        )
+        let productIdentity = new ProductIdentity(identityProvider)
+        const inventory = new Inventory(inMemoryProductStorage, productIdentity)
         return new InventoryConfigurator(
             inMemoryProductStorage,
             inventory

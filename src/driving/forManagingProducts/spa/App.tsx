@@ -5,6 +5,7 @@ import {InventoryConfigurator} from "../../../InventoryConfigurator";
 import {Inventory} from "../../../inventory/Inventory";
 import {InventoryProvider} from "./ForManagingProductsReactAdapter";
 import {ProductManager} from "./ProductManager";
+import {ProductIdentity} from "../../../inventory/ProductIdentity";
 
 
 // Creamos una instancia del configurador para la aplicación web
@@ -26,7 +27,7 @@ const createAppConfigurator = () => {
             'pr-011',
     );
     // Crear la instancia del inventario
-    const inventory = new Inventory(storage, identityProvider);
+    const inventory = new Inventory(storage, new ProductIdentity(identityProvider));
     // Crear y devolver el configurador
     return new InventoryConfigurator(storage, inventory);
 };

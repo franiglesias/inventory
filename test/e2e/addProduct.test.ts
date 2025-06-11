@@ -9,7 +9,7 @@ describe('For Managing Products Port', () => {
 
     beforeEach(async () => {
         const fixtures = new Map<string, any>([
-            ['identities', ['new-product-id', 'second-product-id']]
+            ['identities', ['1', '2']]
         ])
         forManagingProducts = new ForManagingProductsTest(fixtures)
     })
@@ -17,7 +17,7 @@ describe('For Managing Products Port', () => {
     describe('When we add a product that is not in our database', () => {
         it('should confirm the identifier of the added product', () => {
             const result = forManagingProducts.AddProduct('ProductName', 100)
-            expect(result.unwrap()).toEqual('new-product-id')
+            expect(result.unwrap()).toEqual('pro-00001')
         })
 
         it('should store in the database, so I can get its information', () => {
@@ -53,9 +53,9 @@ describe('For Managing Products Port', () => {
         it('should not change the stock of the existing product', () => {
             forManagingProducts.AddProduct('ProductName', 100)
             forManagingProducts.AddProduct('ProductName', 200)
-            const currentStock = forManagingProducts.GetCurrentStock('new-product-id')
+            const currentStock = forManagingProducts.GetCurrentStock('pro-00001')
             expect(currentStock.unwrap()).toEqual({
-                id: 'new-product-id',
+                id: 'pro-00001',
                 name: 'ProductName',
                 stock: 100
             })

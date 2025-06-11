@@ -9,6 +9,7 @@ import {Product} from '../../../Product'
 import {InMemoryProductStorage} from '../../../../driven/forStoringProducts/InMemoryProductStorage'
 import {InvalidProductId} from '../../../InvalidProductId'
 import {InvalidProductQuantity} from '../../../InvalidProductQuantity'
+import {ProductIdentity} from '../../../ProductIdentity'
 
 class ForStoringProductsOneProductFake implements ForStoringProducts {
     private product: Product
@@ -39,7 +40,8 @@ describe('ConsumeProductHandler', () => {
             ['existing-product-id', ProductExamples.existingProduct()],
         ]))
         let inventory: Inventory
-        inventory = new Inventory(forStoringProducts, new ForGettingIdentitiesDummy())
+        const productIdentity = new ProductIdentity(new ForGettingIdentitiesDummy())
+        inventory = new Inventory(forStoringProducts, productIdentity)
         handler = new ConsumeProductHandler(inventory)
     })
 
