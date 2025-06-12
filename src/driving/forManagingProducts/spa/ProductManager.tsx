@@ -282,7 +282,7 @@ export const ProductManager: React.FC = () => {
             <tbody>
               {products.map((product) => (
                 <tr key={product.id}>
-                  <td>{product.id.substring(0, 8)}...</td>
+                  <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{product.stock}</td>
                 </tr>

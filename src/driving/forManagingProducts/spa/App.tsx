@@ -10,26 +10,7 @@ import {ProductIdentity} from "../../../inventory/ProductIdentity";
 
 // Creamos una instancia del configurador para la aplicación web
 const createAppConfigurator = () => {
-    // Crear un almacenamiento en memoria vacío
-    const storage = new InMemoryProductStorage(new Map());
-    // Crear un proveedor de identidades
-    const identityProvider = new ConfigurableIdentityProvider(
-            'pr-001',
-            'pr-002',
-            'pr-003',
-            'pr-004',
-            'pr-005',
-            'pr-006',
-            'pr-007',
-            'pr-008',
-            'pr-009',
-            'pr-010',
-            'pr-011',
-    );
-    // Crear la instancia del inventario
-    const inventory = new Inventory(storage, new ProductIdentity(identityProvider));
-    // Crear y devolver el configurador
-    return new InventoryConfigurator(storage, inventory);
+    return InventoryConfigurator.run()
 };
 
 const App: React.FC = () => {
