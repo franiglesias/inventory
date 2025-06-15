@@ -11,7 +11,9 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="EXECUTE_IN_TERMINAL" value="true" />
     <option name="EXECUTE_SCRIPT_FILE" value="false" />
-    <envs />
+    <envs>
+      <env name="APP_ENV" value="local" />
+    </envs>
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Debug Frontend" run_configuration_type="JavascriptDebugType" />
     </method>

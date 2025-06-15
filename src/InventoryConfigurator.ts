@@ -7,42 +7,19 @@ import {ConfigurableIdentityProvider} from './driven/forGettingIdentities/Config
 import {RestockProductHandler} from './inventory/driving/forManagingProducts/restockProduct/RestockProductHandler'
 import {ConsumeProductHandler} from './inventory/driving/forManagingProducts/consumeProduct/ConsumeProductHandler'
 import {ProductIdentity} from './inventory/ProductIdentity'
-import * as process from 'process'
 import {SequentialIdProvider} from './driven/forGettingIdentities/SequentialIdProvider'
+import {Environment} from './Environment'
+import {Dicky} from './Dicky'
 
 
 export class InventoryConfigurator {
-    private readonly storage: InMemoryProductStorage
     private readonly inventory: Inventory
 
-    constructor(storage: InMemoryProductStorage, inventory: Inventory) {
-        this.storage = storage
+    constructor(inventory: Inventory) {
         this.inventory = inventory
     }
-
-    private static getEnvironment(): string {
-        if (!process.env) {
-            throw new Error('Variables de entorno no disponibles');
-        }
-
-        const env = process.env.APP_ENV || process.env.REACT_APP_ENV;
-
-        if (!env) {
-            console.warn('Variable de entorno no definida, usando "test" por defecto');
-            return 'test';
-        }
-
-        const validEnvs = ['test', 'local', 'production'];
-        if (!validEnvs.includes(env)) {
-            console.warn(`Ambiente "${env}" no reconocido, usando "test" por defecto`);
-            return 'test';
-        }
-
-        return env;
-    }
-
     static run(fixtures?: Map<string, any>): InventoryConfigurator {
-        const environment: string = this.getEnvironment()
+        const environment: string = new Environment().current()
         switch (environment) {
             case 'local':
                 return this.forLocal()
@@ -53,30 +30,46 @@ export class InventoryConfigurator {
     }
 
     static forTest(fixtures: Map<string, any>): InventoryConfigurator {
-        const inMemoryProductStorage = new InMemoryProductStorage(
-            fixtures.get('products') || new Map<string, Product>()
-        )
-        const identityProvider = new ConfigurableIdentityProvider(
-            ...fixtures.get('identities') || []
-        )
-        const productIdentity = new ProductIdentity(identityProvider)
-        const inventory = new Inventory(inMemoryProductStorage, productIdentity)
+        const dic = new Dicky()
+        dic.registerSingleton('storage', () => {
+            return new InMemoryProductStorage(
+                fixtures.get('products') || new Map<string, Product>()
+            )
+        })
+        dic.registerSingleton('identity', (dic: Dicky) => {
+            return new ConfigurableIdentityProvider(
+                ...fixtures.get('identities') || []
+            )
+        })
+        dic.registerSingleton('productIdentity', (dic: Dicky) => {
+            return new ProductIdentity(dic.resolve('identity'))
+        })
+        dic.registerSingleton('inventory', (dic: Dicky) => {
+            return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
+        })
         return new InventoryConfigurator(
-            inMemoryProductStorage,
-            inventory
+            dic.resolve('inventory') as Inventory,
         )
     }
 
     static forLocal(): InventoryConfigurator {
-        const inMemoryProductStorage = new InMemoryProductStorage(
-            new Map<string, Product>()
-        )
-        const identityProvider = new SequentialIdProvider()
-        const productIdentity = new ProductIdentity(identityProvider)
-        const inventory = new Inventory(inMemoryProductStorage, productIdentity)
+        const dic = new Dicky()
+        dic.registerSingleton('storage', () => {
+            return new InMemoryProductStorage(
+                new Map<string, Product>()
+            )
+        })
+        dic.registerSingleton('identity', (dic: Dicky) => {
+            return new SequentialIdProvider()
+        })
+        dic.registerSingleton('productIdentity', (dic: Dicky) => {
+            return new ProductIdentity(dic.resolve('identity'))
+        })
+        dic.registerSingleton('inventory', (dic: Dicky) => {
+            return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
+        })
         return new InventoryConfigurator(
-            inMemoryProductStorage,
-            inventory
+            dic.resolve('inventory') as Inventory,
         )
     }
 

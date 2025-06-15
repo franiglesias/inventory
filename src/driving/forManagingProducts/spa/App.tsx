@@ -1,11 +1,7 @@
 import React from 'react';
-import {InMemoryProductStorage} from "../../../driven/forStoringProducts/InMemoryProductStorage";
-import {ConfigurableIdentityProvider} from "../../../driven/forGettingIdentities/ConfigurableIdentityProvider";
 import {InventoryConfigurator} from "../../../InventoryConfigurator";
-import {Inventory} from "../../../inventory/Inventory";
 import {InventoryProvider} from "./ForManagingProductsReactAdapter";
 import {ProductManager} from "./ProductManager";
-import {ProductIdentity} from "../../../inventory/ProductIdentity";
 
 
 // Creamos una instancia del configurador para la aplicación web
