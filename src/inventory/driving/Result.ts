@@ -55,5 +55,4 @@ export class FailedResult<T> implements Result<T> {
     error(): Error {
         return this.fail
     }
-
 }
