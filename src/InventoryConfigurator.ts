@@ -13,10 +13,10 @@ import {Dicky} from './Dicky'
 
 
 export class InventoryConfigurator {
-    private readonly inventory: Inventory
+    private readonly dic: Dicky
 
-    constructor(inventory: Inventory) {
-        this.inventory = inventory
+    constructor(dic: Dicky) {
+        this.dic = dic
     }
     static run(fixtures?: Map<string, any>): InventoryConfigurator {
         const environment: string = new Environment().current()
@@ -47,9 +47,7 @@ export class InventoryConfigurator {
         dic.registerSingleton('inventory', (dic: Dicky) => {
             return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
         })
-        return new InventoryConfigurator(
-            dic.resolve('inventory') as Inventory,
-        )
+        return new InventoryConfigurator(dic)
     }
 
     static forLocal(): InventoryConfigurator {
@@ -68,26 +66,24 @@ export class InventoryConfigurator {
         dic.registerSingleton('inventory', (dic: Dicky) => {
             return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
         })
-        return new InventoryConfigurator(
-            dic.resolve('inventory') as Inventory,
-        )
+        return new InventoryConfigurator(dic)
     }
 
     buildGetCurrentStockHandler(): GetCurrentStockHandler {
         return new GetCurrentStockHandler(
-            this.inventory
+            this.dic.resolve('inventory')
         )
     }
 
     buildAddProductHandler() {
-        return new AddProductHandler(this.inventory)
+        return new AddProductHandler(this.dic.resolve('inventory'))
     }
 
     buildRestockProductHandler() {
-        return new RestockProductHandler(this.inventory)
+        return new RestockProductHandler(this.dic.resolve('inventory'))
     }
 
     buildConsumeProductHandler() {
-        return new ConsumeProductHandler(this.inventory)
+        return new ConsumeProductHandler(this.dic.resolve('inventory'))
     }
 }
