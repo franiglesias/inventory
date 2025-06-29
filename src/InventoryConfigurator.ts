@@ -10,7 +10,11 @@ import {ProductIdentity} from './inventory/ProductIdentity'
 import {SequentialIdProvider} from './driven/forGettingIdentities/SequentialIdProvider'
 import {Environment} from './Environment'
 import {Dicky} from './Dicky'
-
+import {MessageBus} from './lib/message-bus/MessageBus'
+import {AddProduct} from './inventory/driving/forManagingProducts/addProduct/AddProduct'
+import {RestockProduct} from './inventory/driving/forManagingProducts/restockProduct/RestockProduct'
+import {ConsumeProduct} from './inventory/driving/forManagingProducts/consumeProduct/ConsumeProduct'
+import {GetCurrentStock} from './inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
 
 export class InventoryConfigurator {
     private readonly dic: Dicky
@@ -18,6 +22,7 @@ export class InventoryConfigurator {
     constructor(dic: Dicky) {
         this.dic = dic
     }
+
     static run(fixtures?: Map<string, any>): InventoryConfigurator {
         const environment: string = new Environment().current()
         switch (environment) {
@@ -47,6 +52,26 @@ export class InventoryConfigurator {
         dic.registerSingleton('inventory', (dic: Dicky) => {
             return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
         })
+        dic.registerSingleton(AddProductHandler.name, (dic: Dicky) => {
+            return new AddProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(RestockProductHandler.name, (dic: Dicky) => {
+            return new RestockProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(ConsumeProductHandler.name, (dic: Dicky) => {
+            return new ConsumeProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(GetCurrentStockHandler.name, (dic: Dicky) => {
+            return new GetCurrentStockHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(MessageBus.name, (dic: Dicky) => {
+            const bus = new MessageBus()
+            bus.registerHandler(AddProduct, dic.resolve(AddProductHandler.name))
+            bus.registerHandler(RestockProduct, dic.resolve(RestockProductHandler.name))
+            bus.registerHandler(ConsumeProduct, dic.resolve(ConsumeProductHandler.name))
+            bus.registerHandler(GetCurrentStock, dic.resolve(GetCurrentStockHandler.name))
+            return bus
+        })
         return new InventoryConfigurator(dic)
     }
 
@@ -66,24 +91,46 @@ export class InventoryConfigurator {
         dic.registerSingleton('inventory', (dic: Dicky) => {
             return new Inventory(dic.resolve('storage'), dic.resolve('productIdentity'))
         })
+        dic.registerSingleton(AddProductHandler.name, (dic: Dicky) => {
+            return new AddProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(RestockProductHandler.name, (dic: Dicky) => {
+            return new RestockProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(ConsumeProductHandler.name, (dic: Dicky) => {
+            return new ConsumeProductHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(GetCurrentStockHandler.name, (dic: Dicky) => {
+            return new GetCurrentStockHandler(dic.resolve('inventory'))
+        })
+        dic.registerSingleton(MessageBus.name, (dic: Dicky) => {
+            const bus = new MessageBus()
+            bus.registerHandler(AddProduct, dic.resolve(AddProductHandler.name))
+            bus.registerHandler(RestockProduct, dic.resolve(RestockProductHandler.name))
+            bus.registerHandler(ConsumeProduct, dic.resolve(ConsumeProductHandler.name))
+            bus.registerHandler(GetCurrentStock, dic.resolve(GetCurrentStockHandler.name))
+            return bus
+        })
         return new InventoryConfigurator(dic)
     }
 
     buildGetCurrentStockHandler(): GetCurrentStockHandler {
-        return new GetCurrentStockHandler(
-            this.dic.resolve('inventory')
-        )
+        return this.dic.resolve(GetCurrentStockHandler.name)
     }
 
-    buildAddProductHandler() {
-        return new AddProductHandler(this.dic.resolve('inventory'))
+    buildAddProductHandler(): AddProductHandler {
+        return this.dic.resolve(AddProductHandler.name)
     }
 
-    buildRestockProductHandler() {
-        return new RestockProductHandler(this.dic.resolve('inventory'))
+    buildRestockProductHandler(): RestockProductHandler {
+        return this.dic.resolve(RestockProductHandler.name)
     }
 
-    buildConsumeProductHandler() {
-        return new ConsumeProductHandler(this.dic.resolve('inventory'))
+    buildConsumeProductHandler(): ConsumeProductHandler {
+        return this.dic.resolve(ConsumeProductHandler.name)
+    }
+
+    getMessageBus(): MessageBus {
+        return this.dic.resolve(MessageBus.name)
     }
 }
