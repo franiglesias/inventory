@@ -42,20 +42,19 @@ interface InventoryProviderProps {
 
 // Componente proveedor que encapsula la funcionalidad del inventario
 export const InventoryProvider: React.FC<InventoryProviderProps> = ({ children, configurator }) => {
-  // Estados para las operaciones
+      // Estados para las operaciones
   const [addProductState, setAddProductState] = useState<OperationState>({ loading: false, error: null });
   const [getCurrentStockState, setGetCurrentStockState] = useState<OperationState>({ loading: false, error: null });
   const [restockProductState, setRestockProductState] = useState<OperationState>({ loading: false, error: null });
   const [consumeProductState, setConsumeProductState] = useState<OperationState>({ loading: false, error: null });
 
-  // Método para añadir un producto
   const addProduct = useCallback(
     async (productName: string, initialQuantity: number): Promise<Result<string>> => {
       setAddProductState({ loading: true, error: null });
       try {
         const command = new AddProduct(productName, initialQuantity);
-        const handler = configurator.buildAddProductHandler();
-        const result = handler.handle(command);
+        const bus = configurator.getMessageBus();
+        const result = bus.dispatch(command);
         setAddProductState({ loading: false, error: null });
 
         // Dispatch productAdded event if the operation was successful
@@ -82,8 +81,8 @@ export const InventoryProvider: React.FC<InventoryProviderProps> = ({ children, 
       setGetCurrentStockState({ loading: true, error: null });
       try {
         const query = new GetCurrentStock(productId);
-        const handler = configurator.buildGetCurrentStockHandler();
-        const result = handler.handle(query);
+        const bus = configurator.getMessageBus();
+        const result = bus.dispatch(query);
         setGetCurrentStockState({ loading: false, error: null });
         return result;
       } catch (error) {
@@ -95,14 +94,13 @@ export const InventoryProvider: React.FC<InventoryProviderProps> = ({ children, 
     [configurator]
   );
 
-  // Método para reabastecer un producto
   const restockProduct = useCallback(
     async (productId: string, quantity: number): Promise<Result<void>> => {
       setRestockProductState({ loading: true, error: null });
       try {
         const command = new RestockProduct(productId, quantity);
-        const handler = configurator.buildRestockProductHandler();
-        const result = handler.handle(command);
+        const bus = configurator.getMessageBus();
+        const result = bus.dispatch(command);
         setRestockProductState({ loading: false, error: null });
 
         // Dispatch productStockUpdated event if the operation was successful
@@ -128,8 +126,8 @@ export const InventoryProvider: React.FC<InventoryProviderProps> = ({ children, 
       setConsumeProductState({ loading: true, error: null });
       try {
         const command = new ConsumeProduct(productId, quantity);
-        const handler = configurator.buildConsumeProductHandler();
-        const result = handler.handle(command);
+        const bus = configurator.getMessageBus();
+        const result = bus.dispatch(command);
         setConsumeProductState({ loading: false, error: null });
 
         // Dispatch productStockUpdated event if the operation was successful

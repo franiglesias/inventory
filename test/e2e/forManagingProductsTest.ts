@@ -15,25 +15,25 @@ export class ForManagingProductsTest {
 
     AddProduct(productName: string | undefined, initialQuantity: number): Result<string> {
         const command = new AddProduct(productName!, initialQuantity)
-        const handler = this.configurator.buildAddProductHandler()
-        return handler.handle(command)
+        const bus = this.configurator.getMessageBus()
+        return bus.dispatch(command)
     }
 
     GetCurrentStock(productId: string): Result<object> {
         const query = new GetCurrentStock(productId)
-        const handler = this.configurator.buildGetCurrentStockHandler()
-        return handler.handle(query)
+        const bus = this.configurator.getMessageBus()
+        return bus.dispatch(query)
     }
 
     RestockProduct(existingProductId: string | undefined, number: number | undefined): Result<void> {
         const command = new RestockProduct(existingProductId!, number!)
-        const handler = this.configurator.buildRestockProductHandler()
-        return handler.handle(command)
+        const bus = this.configurator.getMessageBus()
+        return bus.dispatch(command)
     }
 
     ConsumeProduct(existingProductId: string | undefined, number: number | undefined): Result<void> {
         const command = new ConsumeProduct(existingProductId!, number!)
-        const handler = this.configurator.buildConsumeProductHandler()
-        return handler.handle(command)
+        const bus = this.configurator.getMessageBus()
+        return bus.dispatch(command)
     }
 }
