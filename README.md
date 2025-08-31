@@ -36,6 +36,97 @@ npm install
 - `npm run dev`: Same as `start` - starts the development server
 - `npm run debug`: Start the development server with source maps enabled for debugging
 
+## Docker Support
+
+This project includes full Docker support for both development and production environments.
+
+### Docker Files
+
+The project includes the following Docker-related files:
+- `Dockerfile` - Multi-stage build for development and production
+- `docker-compose.yml` - Orchestration for different environments
+- `.dockerignore` - Excludes unnecessary files from Docker build context
+- `nginx.conf` - Nginx configuration for production deployment
+
+### Docker Commands (NPM Scripts)
+
+**Building Images:**
+- `npm run docker:build` - Build production image
+- `npm run docker:build:prod` - Build production image (explicit)
+- `npm run docker:build:dev` - Build development image
+
+**Running Containers:**
+- `npm run docker:run` - Run production container on port 8080
+- `npm run docker:run:dev` - Run development container with hot reload
+
+**Docker Compose:**
+- `npm run compose:up` - Start default production service
+- `npm run compose:up:dev` - Start development environment with hot reload
+- `npm run compose:up:prod` - Start production environment
+- `npm run compose:down` - Stop all services
+- `npm run compose:build` - Build all services
+
+### Quick Start with Docker
+
+**Development with hot reload:**
+```bash
+npm run compose:up:dev
+```
+Access the application at: http://localhost:3000
+
+**Production deployment:**
+```bash
+npm run compose:up:prod
+```
+Access the application at: http://localhost:80
+
+**Alternative production (port 8080):**
+```bash
+npm run compose:up
+```
+Access the application at: http://localhost:8080
+
+### Manual Docker Commands
+
+**Build and run production:**
+```bash
+docker build --target production -t inventory:prod .
+docker run -p 8080:80 inventory:prod
+```
+
+**Build and run development:**
+```bash
+docker build --target development -t inventory:dev .
+docker run -p 3000:3000 -v $(pwd):/app -v /app/node_modules inventory:dev
+```
+
+**Using Docker Compose:**
+```bash
+# Development
+docker-compose --profile dev up
+
+# Production
+docker-compose --profile prod up
+
+# Default (production on port 8080)
+docker-compose up
+```
+
+### Docker Architecture
+
+The Dockerfile uses a multi-stage build:
+
+1. **Builder stage**: Installs dependencies and builds the React application
+2. **Production stage**: Uses nginx to serve optimized static files
+3. **Development stage**: Provides hot reload capabilities with volume mounting
+
+The production image is optimized with:
+- Nginx for serving static files
+- Gzip compression
+- Security headers
+- Client-side routing support for React Router
+- Static asset caching
+
 ## Development
 
 The project uses:

@@ -11,7 +11,17 @@
     "start": "webpack serve --mode development --open",
     "dev": "webpack serve --mode development --open",
     "debug": "webpack serve --mode development --open --devtool source-map",
-    "build:backend": "npm run clean && tsc"
+    "build:backend": "npm run clean && tsc",
+    "docker:build": "docker build -t inventory .",
+    "docker:build:prod": "docker build --target production -t inventory:prod .",
+    "docker:build:dev": "docker build --target development -t inventory:dev .",
+    "docker:run": "docker run -p 8080:80 inventory:prod",
+    "docker:run:dev": "docker run -p 3000:3000 -v $(pwd):/app -v /app/node_modules inventory:dev",
+    "compose:up": "docker-compose up",
+    "compose:up:dev": "docker-compose --profile dev up",
+    "compose:up:prod": "docker-compose --profile prod up",
+    "compose:down": "docker-compose down",
+    "compose:build": "docker-compose build"
   },
   "keywords": [],
   "author": "",

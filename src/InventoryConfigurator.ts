@@ -14,6 +14,7 @@ import {AddProduct} from './inventory/driving/forManagingProducts/addProduct/Add
 import {RestockProduct} from './inventory/driving/forManagingProducts/restockProduct/RestockProduct'
 import {ConsumeProduct} from './inventory/driving/forManagingProducts/consumeProduct/ConsumeProduct'
 import {GetCurrentStock} from './inventory/driving/forManagingProducts/getCurrentStock/GetCurrentStock'
+import {SequentialIdProvider} from './driven/forGettingIdentities/SequentialIdProvider'
 
 function configuredMessageBus(dic: Dicky): MessageBus {
     const bus = new MessageBus()
@@ -57,7 +58,7 @@ function configureContainer(env: string, fixtures?: Map<string, any>) {
             return new InMemoryProductStorage(new Map<string, Product>())
         })
         dic.registerSingleton('ForGettingIdentities', (dic: Dicky) => {
-            return new ConfigurableIdentityProvider('3')
+            return new SequentialIdProvider()
         })
     }
 
